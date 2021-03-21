@@ -13,6 +13,7 @@ export default class Zeroconf extends EventEmitter {
     super(props)
 
     this._services = {}
+    this._domains = {}
     this._publishedServices = {}
     this._dListeners = {}
 
@@ -124,6 +125,12 @@ export default class Zeroconf extends EventEmitter {
     } else {
       RNZeroconf.scan(type, protocol, domain)
     }
+  }
+
+  scanDomains() {
+    this._domains = {}
+    this.emit('update')
+    RNZeroconf.scanDomains();
   }
 
   /**
