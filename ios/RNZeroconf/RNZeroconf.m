@@ -33,6 +33,7 @@ RCT_EXPORT_METHOD(scan:(NSString *)type protocol:(NSString *)protocol domain:(NS
 
 RCT_EXPORT_METHOD(scanDomains)
 {
+    NSLog(@"STARTING SCAN DOMAINS HAHAHAAHA")
     [self stop];
     [self.browser searchForBrowsableDomains];
 }
@@ -110,7 +111,7 @@ RCT_EXPORT_METHOD(unregisterService:(NSString *) serviceName)
             didFindDomain:(NSString *)domainString
                 moreComing:(BOOL)moreComing
 {
-    NSLog(@"%@", domainString);
+    NSLog(@"FOUND A DOMAIN BITCH: %@", domainString);
     // [self.bridge.eventDispatcher sendDeviceEventWithName:@"RNZeroconfFoundDomain" body:domainString];
 }
 
