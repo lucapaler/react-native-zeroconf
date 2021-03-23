@@ -24,7 +24,11 @@ const NSString *kRNServiceTxtRecords = @"txt";
     NSMutableDictionary *serviceInfo = [[NSMutableDictionary alloc] init];
     serviceInfo[kRNServiceKeysName] = service.name;
 
+    NSLog(@"CURRENTLY SERIALIZING %@", service.name);
+
     if (resolved) {
+        NSLog(@"SHIT IS RESOLVED FO SHO")
+
         serviceInfo[kRNServiceKeysFullName] = [NSString stringWithFormat:@"%@%@", service.hostName, service.type];
         serviceInfo[kRNServiceKeysAddresses] = [self addressesFromService:service];
         serviceInfo[kRNServiceKeysHost] = service.hostName;

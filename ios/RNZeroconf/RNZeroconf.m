@@ -14,9 +14,6 @@
 @property (nonatomic, strong, readonly) NSMutableDictionary *resolvingServices;
 @property (nonatomic, strong, readonly) NSMutableDictionary *publishedServices;
 
-@property (nonatomic, strong, readonly) NSMutableDictionary *resolvingDomains;
-@property (nonatomic, strong, readonly) NSMutableDictionary *publishedDomains;
-
 @end
 
 @implementation RNZeroconf
@@ -29,13 +26,6 @@ RCT_EXPORT_METHOD(scan:(NSString *)type protocol:(NSString *)protocol domain:(NS
 {
     [self stop];
     [self.browser searchForServicesOfType:[NSString stringWithFormat:@"_%@._%@.", type, protocol] inDomain:domain];
-}
-
-RCT_EXPORT_METHOD(scanDomains)
-{
-    NSLog(@"STARTING SCAN DOMAINS HAHAHAAHA")
-    [self stop];
-    [self.browser searchForBrowsableDomains];
 }
 
 RCT_EXPORT_METHOD(stop)
@@ -101,18 +91,15 @@ RCT_EXPORT_METHOD(unregisterService:(NSString *) serviceName)
     // resolving services must be strongly referenced or they will be garbage collected
     // and will never resolve or timeout.
     // source: http://stackoverflow.com/a/16130535/2715
-    self.resolvingServices[service.name] = service;
+    
+    // Don't try to resolve services found through _services._dns-sd._udp. which don't contain
+    // addresses and so will not resolve and cause a crash
+    if (![service.type isEqualToString:@"_tcp.local."]) {
+        self.resolvingServices[service.name] = service;
 
-    service.delegate = self;
-    [service resolveWithTimeout:5.0];
-}
-
-- (void) netServiceBrowser:(NSNetServiceBrowser *)browser
-            didFindDomain:(NSString *)domainString
-                moreComing:(BOOL)moreComing
-{
-    NSLog(@"FOUND A DOMAIN BITCH: %@", domainString);
-    // [self.bridge.eventDispatcher sendDeviceEventWithName:@"RNZeroconfFoundDomain" body:domainString];
+        service.delegate = self;
+        [service resolveWithTimeout:5.0];
+    }
 }
 
 // When a service is removed.
