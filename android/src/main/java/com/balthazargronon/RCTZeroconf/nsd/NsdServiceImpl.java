@@ -85,7 +85,12 @@ public class NsdServiceImpl implements Zeroconf {
                 service.putString(ZeroconfModule.KEY_SERVICE_NAME, serviceInfo.getServiceName());
 
                 zeroconfModule.sendEvent(getReactApplicationContext(), ZeroconfModule.EVENT_FOUND, service);
-                mNsdManager.resolveService(serviceInfo, new NsdServiceImpl.ZeroResolveListener());
+
+                // Don't attempt to resolve when fetching for all available services, as these do
+                // not contain addresses and so will not resolve and cause a crash
+                if (!protocol.equals("dns-sd._udp")) {
+                    mNsdManager.resolveService(serviceInfo, new NsdServiceImpl.ZeroResolveListener());
+                }
             }
 
             @Override
