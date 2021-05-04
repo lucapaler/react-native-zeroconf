@@ -18,3 +18,8 @@ profile
 DerivedData
 
 local.properties
+
+# SECTION - Android Studio
+.project
+.settings
+# !SECTION
